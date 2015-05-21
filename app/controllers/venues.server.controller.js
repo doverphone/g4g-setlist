@@ -73,7 +73,7 @@ exports.delete = function(req, res) {
  * List of Venues
  */
 exports.list = function(req, res) { 
-	Venue.find().sort('-created').populate('user', 'displayName').exec(function(err, venues) {
+	Venue.find().sort('-created').populate('displayName').exec(function(err, venues) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -88,20 +88,10 @@ exports.list = function(req, res) {
  * Venue middleware
  */
 exports.venueByID = function(req, res, next, id) { 
-	Venue.findById(id).populate('user', 'displayName').exec(function(err, venue) {
+	Venue.findById(id).populate('displayName').exec(function(err, venue) {
 		if (err) return next(err);
 		if (! venue) return next(new Error('Failed to load Venue ' + id));
 		req.venue = venue ;
 		next();
 	});
-};
-
-/**
- * Venue authorization middleware
- */
-exports.hasAuthorization = function(req, res, next) {
-	if (req.venue.user.id !== req.user.id) {
-		return res.status(403).send('User is not authorized');
-	}
-	next();
 };
