@@ -73,7 +73,7 @@ exports.delete = function(req, res) {
  * List of Setlists
  */
 exports.list = function(req, res) { 
-	Setlist.find().sort('-created').populate('user', 'displayName').exec(function(err, setlists) {
+	Setlist.find().populate('sets').exec(function(err, setlists) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -88,20 +88,10 @@ exports.list = function(req, res) {
  * Setlist middleware
  */
 exports.setlistByID = function(req, res, next, id) { 
-	Setlist.findById(id).populate('user', 'displayName').exec(function(err, setlist) {
+	Setlist.findById(id).populate('sets.songs').exec(function(err, setlist) {
 		if (err) return next(err);
 		if (! setlist) return next(new Error('Failed to load Setlist ' + id));
 		req.setlist = setlist ;
 		next();
 	});
-};
-
-/**
- * Setlist authorization middleware
- */
-exports.hasAuthorization = function(req, res, next) {
-	if (req.setlist.user.id !== req.user.id) {
-		return res.status(403).send('User is not authorized');
-	}
-	next();
 };

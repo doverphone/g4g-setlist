@@ -6,12 +6,13 @@
 var should = require('should'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
+	Venue = mongoose.model('Venue'),
 	Setlist = mongoose.model('Setlist');
 
 /**
  * Globals
  */
-var user, setlist;
+var user, venue, showDate, setlist;
 
 /**
  * Unit tests
@@ -27,12 +28,17 @@ describe('Setlist Model Unit Tests:', function() {
 			password: 'password'
 		});
 
+		venue = new Venue({
+			name: 'The Doghouse'
+		});
+
+		showDate = new Date('2015-12-02');
+
 		user.save(function() { 
 			setlist = new Setlist({
-				name: 'Setlist Name',
-				user: user
+				venue: venue,
+				date: showDate
 			});
-
 			done();
 		});
 	});
@@ -46,7 +52,16 @@ describe('Setlist Model Unit Tests:', function() {
 		});
 
 		it('should be able to show an error when try to save without name', function(done) { 
-			setlist.name = '';
+			setlist.venue = undefined;
+
+			return setlist.save(function(err) {
+				should.exist(err);
+				done();
+			});
+		});
+
+		it('should be able to show an error when try to save without a show date', function(done) { 
+			setlist.date = undefined;
 
 			return setlist.save(function(err) {
 				should.exist(err);

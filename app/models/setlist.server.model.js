@@ -10,20 +10,23 @@ var mongoose = require('mongoose'),
  * Setlist Schema
  */
 var SetlistSchema = new Schema({
-	name: {
-		type: String,
-		default: '',
-		required: 'Please fill Setlist name',
-		trim: true
-	},
 	created: {
 		type: Date,
 		default: Date.now
 	},
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
-	}
+	date: {
+		type: Date,
+		required: 'Enter a date for the show'
+	},
+	venue: {
+		type: Schema.Types.ObjectId,
+		ref: 'Venue',
+		required: 'Select a venue for the show'
+	},
+	sets: [{
+		type: Schema.Types.ObjectId,
+		ref: 'Set'
+	}]
 });
 
 mongoose.model('Setlist', SetlistSchema);

@@ -11,8 +11,8 @@ module.exports = function(app) {
 
 	app.route('/setlists/:setlistId')
 		.get(setlists.read)
-		.put(users.requiresLogin, setlists.hasAuthorization, setlists.update)
-		.delete(users.requiresLogin, setlists.hasAuthorization, setlists.delete);
+		.put(users.requiresLogin, setlists.update)
+		.delete(users.requiresLogin, setlists.delete);
 
 	// Finish by binding the Setlist middleware
 	app.param('setlistId', setlists.setlistByID);
