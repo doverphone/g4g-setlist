@@ -11,8 +11,8 @@ module.exports = function(app) {
 
 	app.route('/songs/:songId')
 		.get(songs.read)
-		.put(users.requiresLogin, songs.hasAuthorization, songs.update)
-		.delete(users.requiresLogin, songs.hasAuthorization, songs.delete);
+		.put(users.requiresLogin, songs.update)
+		.delete(users.requiresLogin, songs.delete);
 
 	// Finish by binding the Song middleware
 	app.param('songId', songs.songByID);

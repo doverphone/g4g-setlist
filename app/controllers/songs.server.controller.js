@@ -73,7 +73,7 @@ exports.delete = function(req, res) {
  * List of Songs
  */
 exports.list = function(req, res) { 
-	Song.find().sort('-created').populate('user', 'displayName').exec(function(err, songs) {
+	Song.find().sort('-created').populate('displayName').exec(function(err, songs) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -88,20 +88,10 @@ exports.list = function(req, res) {
  * Song middleware
  */
 exports.songByID = function(req, res, next, id) { 
-	Song.findById(id).populate('user', 'displayName').exec(function(err, song) {
+	Song.findById(id).populate('displayName').exec(function(err, song) {
 		if (err) return next(err);
 		if (! song) return next(new Error('Failed to load Song ' + id));
 		req.song = song ;
 		next();
 	});
-};
-
-/**
- * Song authorization middleware
- */
-exports.hasAuthorization = function(req, res, next) {
-	if (req.song.user.id !== req.user.id) {
-		return res.status(403).send('User is not authorized');
-	}
-	next();
 };

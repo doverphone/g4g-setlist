@@ -74,7 +74,6 @@ describe('Song CRUD tests', function() {
 								var songs = songsGetRes.body;
 
 								// Set assertions
-								(songs[0].user._id).should.equal(userId);
 								(songs[0].name).should.match('Song Name');
 
 								// Call the assertion callback

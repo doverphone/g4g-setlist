@@ -20,9 +20,32 @@ var SongSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
+	artist: {
+		type: String,
+		trim: true,
+		default: ''
+	},
+	archived: {
+		type: Boolean,
+		default: false
+	},
+	url: {
+		type: String,
+		trim: true,
+		default: ''
+	},
+	thumbnail: {
+		type: String,
+		default: ''
+	},
+	lyrics: {
+		type: String,
+		default: ''
+	},
+	groupNotes: {
+		type: String,
+		trim: true,
+		default: ''
 	}
 });
 

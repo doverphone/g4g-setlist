@@ -37,6 +37,13 @@ describe('Song Model Unit Tests:', function() {
 		});
 	});
 
+	describe('Song Default Values: ', function() {
+		it('should have not be archived by default', function(done) {
+			song.should.have.property('archived', false);
+			done();
+		});
+	});
+
 	describe('Method Save', function() {
 		it('should be able to save without problems', function(done) {
 			return song.save(function(err) {
