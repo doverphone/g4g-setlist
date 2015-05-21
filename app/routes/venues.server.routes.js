@@ -11,8 +11,8 @@ module.exports = function(app) {
 
 	app.route('/venues/:venueId')
 		.get(venues.read)
-		.put(users.requiresLogin, venues.hasAuthorization, venues.update)
-		.delete(users.requiresLogin, venues.hasAuthorization, venues.delete);
+		.put(users.requiresLogin, venues.update)
+		.delete(users.requiresLogin, venues.delete);
 
 	// Finish by binding the Venue middleware
 	app.param('venueId', venues.venueByID);

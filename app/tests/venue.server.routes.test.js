@@ -74,7 +74,6 @@ describe('Venue CRUD tests', function() {
 								var venues = venuesGetRes.body;
 
 								// Set assertions
-								(venues[0].user._id).should.equal(userId);
 								(venues[0].name).should.match('Venue Name');
 
 								// Call the assertion callback

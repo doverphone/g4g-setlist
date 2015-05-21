@@ -20,9 +20,17 @@ var VenueSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
+	address: {
+		type: String,
+		default: ''
+	},
+	phone: {
+		type: String,
+		default: ''
+	},
+	info: {
+		type: String,
+		default: ''
 	}
 });
 
