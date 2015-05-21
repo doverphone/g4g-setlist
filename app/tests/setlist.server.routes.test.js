@@ -5,13 +5,14 @@ var should = require('should'),
 	app = require('../../server'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
+	Venue = mongoose.model('Venue'),
 	Setlist = mongoose.model('Setlist'),
 	agent = request.agent(app);
 
 /**
  * Globals
  */
-var credentials, user, setlist;
+var credentials, user, venue, setlist, showDate;
 
 /**
  * Setlist routes tests
@@ -35,11 +36,18 @@ describe('Setlist CRUD tests', function() {
 			provider: 'local'
 		});
 
+		venue = new Venue({
+			name: 'The Doghouse'
+		});
+
+		showDate = new Date('2015-12-02');
+
 		// Save a user to the test db and create new Setlist
 		user.save(function() {
-			setlist = {
-				name: 'Setlist Name'
-			};
+			setlist = new Setlist({
+				venue: venue,
+				date: showDate
+			});
 
 			done();
 		});
@@ -74,8 +82,7 @@ describe('Setlist CRUD tests', function() {
 								var setlists = setlistsGetRes.body;
 
 								// Set assertions
-								(setlists[0].user._id).should.equal(userId);
-								(setlists[0].name).should.match('Setlist Name');
+								(setlists[0].venue.toString()).should.equal(venue._id.toString());
 
 								// Call the assertion callback
 								done();
@@ -94,9 +101,9 @@ describe('Setlist CRUD tests', function() {
 			});
 	});
 
-	it('should not be able to save Setlist instance if no name is provided', function(done) {
+	it('should not be able to save Setlist instance if no venue is provided', function(done) {
 		// Invalidate name field
-		setlist.name = '';
+		setlist.venue = undefined;
 
 		agent.post('/auth/signin')
 			.send(credentials)
@@ -114,7 +121,7 @@ describe('Setlist CRUD tests', function() {
 					.expect(400)
 					.end(function(setlistSaveErr, setlistSaveRes) {
 						// Set message assertion
-						(setlistSaveRes.body.message).should.match('Please fill Setlist name');
+						(setlistSaveRes.body.message).should.match('Select a venue for the show');
 						
 						// Handle Setlist save error
 						done(setlistSaveErr);
@@ -141,8 +148,9 @@ describe('Setlist CRUD tests', function() {
 						// Handle Setlist save error
 						if (setlistSaveErr) done(setlistSaveErr);
 
-						// Update Setlist name
-						setlist.name = 'WHY YOU GOTTA BE SO MEAN?';
+						// Update Venue
+						var newVenue = new Venue({name: 'The Maxx'});
+						setlist.venue = newVenue;
 
 						// Update existing Setlist
 						agent.put('/setlists/' + setlistSaveRes.body._id)
@@ -154,50 +162,13 @@ describe('Setlist CRUD tests', function() {
 
 								// Set assertions
 								(setlistUpdateRes.body._id).should.equal(setlistSaveRes.body._id);
-								(setlistUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+								(setlistUpdateRes.body.venue.toString()).should.match(newVenue._id.toString());
 
 								// Call the assertion callback
 								done();
 							});
 					});
 			});
-	});
-
-	it('should be able to get a list of Setlists if not signed in', function(done) {
-		// Create new Setlist model instance
-		var setlistObj = new Setlist(setlist);
-
-		// Save the Setlist
-		setlistObj.save(function() {
-			// Request Setlists
-			request(app).get('/setlists')
-				.end(function(req, res) {
-					// Set assertion
-					res.body.should.be.an.Array.with.lengthOf(1);
-
-					// Call the assertion callback
-					done();
-				});
-
-		});
-	});
-
-
-	it('should be able to get a single Setlist if not signed in', function(done) {
-		// Create new Setlist model instance
-		var setlistObj = new Setlist(setlist);
-
-		// Save the Setlist
-		setlistObj.save(function() {
-			request(app).get('/setlists/' + setlistObj._id)
-				.end(function(req, res) {
-					// Set assertion
-					res.body.should.be.an.Object.with.property('name', setlist.name);
-
-					// Call the assertion callback
-					done();
-				});
-		});
 	});
 
 	it('should be able to delete Setlist instance if signed in', function(done) {
@@ -262,6 +233,7 @@ describe('Setlist CRUD tests', function() {
 
 	afterEach(function(done) {
 		User.remove().exec();
+		Venue.remove().exec();
 		Setlist.remove().exec();
 		done();
 	});
