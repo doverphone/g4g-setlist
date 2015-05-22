@@ -6,14 +6,10 @@
         <h1>Setlists</h1>
     </div>
     <div class="list-group">
-        <a data-ng-repeat="setlist in setlists" data-ng-href="#!/setlists/{{setlist._id}}" class="list-group-item">
-			<small class="list-group-item-text">
-				Posted on
-				<span data-ng-bind="setlist.created | date:'medium'"></span>
-				by
-				<span data-ng-bind="setlist.user.displayName"></span>
-			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="setlist.name"></h4>
+        <a data-ng-repeat="setlist in setlists | orderBy:'date'" data-ng-href="#!/setlists/{{setlist._id}}" class="list-group-item">
+			<h4 class="list-group-item-heading">
+                <span>{{setlist.date | date:'MM-dd-yyyy'}} - {{setlist.venue.name}}</span>         
+            </h4>
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!setlists.$resolved || setlists.length">

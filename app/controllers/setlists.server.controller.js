@@ -73,7 +73,7 @@ exports.delete = function(req, res) {
  * List of Setlists
  */
 exports.list = function(req, res) { 
-	Setlist.find().populate('sets').exec(function(err, setlists) {
+	Setlist.find().populate('venue').exec(function(err, setlists) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
