@@ -6,7 +6,8 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Song = mongoose.model('Song'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	fs = require('fs');
 
 /**
  * Create a Song
@@ -93,5 +94,17 @@ exports.songByID = function(req, res, next, id) {
 		if (! song) return next(new Error('Failed to load Song ' + id));
 		req.song = song ;
 		next();
+	});
+};
+
+exports.upload = function(req, res, next) {
+	console.log(req.files.mp3);
+	var newPath = '/Users/bendoherty/Sites/meanlist/public/uploads/' + req.files.mp3.name;
+	console.log(newPath);
+	fs.readFile(req.files.mp3.path, function (err, data) {
+		fs.writeFile(newPath, data, function (err) {
+			console.log(err);
+			res.redirect('back');
+		});
 	});
 };

@@ -11,7 +11,7 @@ angular.module('songs').config(['$stateProvider',
 		}).
 		state('createSong', {
 			url: '/songs/create',
-			templateUrl: 'modules/songs/views/create-song.client.view.html'
+			templateUrl: 'modules/songs/views/upload-song.client.view.html'
 		}).
 		state('viewSong', {
 			url: '/songs/:songId',
