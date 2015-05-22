@@ -7,11 +7,18 @@ angular.module('setlists').config(['$stateProvider',
 		$stateProvider.
 		state('listSetlists', {
 			url: '/setlists',
-			templateUrl: 'modules/setlists/views/list-setlists.client.view.html'
+			templateUrl: 'modules/setlists/views/list-setlists.client.view.html',
+			controller: 'SetlistsController',
+			resolve: {
+				setlists: ['Setlists', function(Setlists){
+					return Setlists.query().$promise;
+				}]
+			}
 		}).
 		state('createSetlist', {
 			url: '/setlists/create',
-			templateUrl: 'modules/setlists/views/create-setlist.client.view.html'
+			templateUrl: 'modules/setlists/views/create-setlist.client.view.html',
+			controller: 'SetlistsCreateController'
 		}).
 		state('viewSetlist', {
 			url: '/setlists/:setlistId',
