@@ -22,7 +22,14 @@ angular.module('setlists').config(['$stateProvider',
 		}).
 		state('viewSetlist', {
 			url: '/setlists/:setlistId',
-			templateUrl: 'modules/setlists/views/view-setlist.client.view.html'
+			templateUrl: 'modules/setlists/views/view-setlist.client.view.html',
+			controller: 'SetlistsViewController',
+			resolve: {
+				setlist: ['Setlists', '$stateParams', function(Setlists, $stateParams){
+					return Setlists.get({setlistId: $stateParams.setlistId});
+				}]
+			}
+
 		}).
 		state('editSetlist', {
 			url: '/setlists/:setlistId/edit',

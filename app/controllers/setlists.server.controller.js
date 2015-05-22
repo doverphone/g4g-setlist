@@ -88,7 +88,7 @@ exports.list = function(req, res) {
  * Setlist middleware
  */
 exports.setlistByID = function(req, res, next, id) { 
-	Setlist.findById(id).populate('sets.songs').exec(function(err, setlist) {
+	Setlist.findById(id).populate('venue sets.songs').exec(function(err, setlist) {
 		if (err) return next(err);
 		if (! setlist) return next(new Error('Failed to load Setlist ' + id));
 		req.setlist = setlist ;

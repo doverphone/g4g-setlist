@@ -83,4 +83,7 @@ angular.module('setlists').
 				$scope.error = errorResponse.data.message;
 			});
 		};
-}]);
+	}]).
+	controller('SetlistsViewController', ['$scope', 'setlist', function($scope, setlist){
+		$scope.setlist = setlist;
+	}]);

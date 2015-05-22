@@ -1,8 +1,9 @@
-<section data-ng-controller="SetlistsController" data-ng-init="findOne()">
+<section>
 	<div class="page-header">
-		<h1 data-ng-bind="setlist.name"></h1>
+		<h1>{{setlist.venue.name}}</h1>
+		<h5>{{setlist.date | date:'MM-dd-yyyy'}}</h5>
 	</div>
-	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == setlist.user._id))">
+	<div class="pull-right">
 		<a class="btn btn-primary" href="/#!/setlists/{{setlist._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
@@ -10,12 +11,4 @@
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
-	<small>
-		<em class="text-muted">
-			Posted on
-			<span data-ng-bind="setlist.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="setlist.user.displayName"></span>
-		</em>
-	</small>
 </section>
