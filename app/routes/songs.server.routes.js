@@ -10,7 +10,12 @@ module.exports = function(app) {
 		.get(songs.list)
 		.post(users.requiresLogin, songs.create);
 
-	app.route('/songs/upload').post(multer({dest: '../../public/upload'}), songs.upload);
+	app.route('/songs/upload').post(
+		multer({dest: '../../public/upload'}), 
+		songs.upload, 
+		songs.readMp3
+		// songs.create
+	);
 
 	app.route('/songs/:songId')
 		.get(songs.read)

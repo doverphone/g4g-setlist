@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Song = mongoose.model('Song'),
 	_ = require('lodash'),
-	fs = require('fs');
+	fs = require('fs'),
+	id3 = require('id3js');
 
 /**
  * Create a Song
@@ -98,13 +99,33 @@ exports.songByID = function(req, res, next, id) {
 };
 
 exports.upload = function(req, res, next) {
-	console.log(req.files.mp3);
+	// TODO - use config var for path
 	var newPath = '/Users/bendoherty/Sites/meanlist/public/uploads/' + req.files.mp3.name;
-	console.log(newPath);
 	fs.readFile(req.files.mp3.path, function (err, data) {
 		fs.writeFile(newPath, data, function (err) {
-			console.log(err);
-			res.redirect('back');
+			next();
 		});
+	});
+};
+
+exports.readMp3 = function(req, res, next) {
+	// TODO - use config var for path
+	id3({ file: '/Users/bendoherty/Sites/meanlist/public/uploads/' + req.files.mp3.name, type: id3.OPEN_LOCAL }, function(err, tags) {
+	    if (tags.v2) {
+	    	var song = new Song({
+	    		name: tags.v2.title,
+	    		artist: tags.v2.artist,
+	    	});
+
+	    	song.save(function(err) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					res.redirect('/#!/songs/' + song._id);
+				}
+			});
+	    }
 	});
 };
